@@ -171,8 +171,10 @@ export class DialogManager {
 			iconContainer.x = 258;
 			iconContainer.y = 2;
 			button.connect("clicked", () => {
+				// Close first so a follow-up confirm modal (e.g. hibernate) can grab.
+				if (this._dialog)
+					this._dialog.close();
 				action();
-				this._dialog?.close();
 			});
 			return button;
 		};
@@ -275,8 +277,9 @@ export class DialogManager {
 
 			button.set_child(pillBox);
 			button.connect("clicked", () => {
+				if (this._dialog)
+					this._dialog.close();
 				action();
-				this._dialog?.close();
 			});
 			return button;
 		};
@@ -494,8 +497,9 @@ export class DialogManager {
 					break;
 			}
 			tile.connect("clicked", () => {
+				if (this._dialog)
+					this._dialog.close();
 				action();
-				this._dialog?.close();
 			});
 
 			return tile;

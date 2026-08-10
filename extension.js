@@ -50,7 +50,11 @@ export default class PowerDialExtension extends Extension {
 			this._indicatorManager = null;
 		}
 
-		this._powerActions = null;
+		if (this._powerActions) {
+			this._powerActions.destroy();
+			this._powerActions = null;
+		}
+
 		this._settings = null;
 	}
 }

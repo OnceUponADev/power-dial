@@ -94,6 +94,7 @@ export class PowerOptions {
 
 	createHibernateRow(hibernateGroup, window) {
 		const available = this._settings.get_boolean("hibernate-available");
+		const enabled = this._settings.get_boolean("enable-hibernate");
 
 		const checkRow = new Adw.ActionRow({
 			title: "Check Hibernate Support",
@@ -118,14 +119,46 @@ export class PowerOptions {
 		hibernateGroup.add(hibernateRow);
 
 		const hibernateToggle = new Gtk.Switch({
-			active: this._settings.get_boolean("enable-hibernate"),
+			active: enabled,
 			valign: Gtk.Align.CENTER,
 			sensitive: available,
 		});
 		hibernateRow.add_suffix(hibernateToggle);
 
+		const confirmationRow = new Adw.ComboRow({
+			title: "Confirmation",
+			subtitle: "Show a confirmation dialog before hibernating",
+			sensitive: available && enabled,
+		});
+		hibernateGroup.add(confirmationRow);
+
+		const confirmationModel = new Gtk.StringList();
+		confirmationModel.append("Confirm");
+		confirmationModel.append("Immediate");
+		confirmationRow.set_model(confirmationModel);
+
+		const currentMode = this._settings.get_string("hibernate-confirmation");
+		if (currentMode === "confirm")
+			confirmationRow.set_selected(0);
+		else if (currentMode === "immediate")
+			confirmationRow.set_selected(1);
+
+		confirmationRow.connect("notify::selected", () => {
+			const selectedIndex = confirmationRow.get_selected();
+			const selectedMode = selectedIndex === 0 ? "confirm" : "immediate";
+			this._settings.set_string("hibernate-confirmation", selectedMode);
+		});
+
+		const updateConfirmationSensitive = () => {
+			confirmationRow.set_sensitive(
+				this._settings.get_boolean("hibernate-available") &&
+				this._settings.get_boolean("enable-hibernate")
+			);
+		};
+
 		hibernateToggle.connect("notify::active", () => {
 			this._settings.set_boolean("enable-hibernate", hibernateToggle.get_active());
+			updateConfirmationSensitive();
 		});
 
 		const guideRow = new Adw.ActionRow({
@@ -169,7 +202,8 @@ export class PowerOptions {
 						message = canHibernate
 							? "Hibernate is supported on this system"
 							: "Hibernate is not supported on this system";
-					} catch (e) {
+					} catch {
+						// call_finish throws when the D-Bus method fails.
 						message = "Unable to check hibernate support";
 					}
 
@@ -182,6 +216,7 @@ export class PowerOptions {
 
 					hibernateRow.set_sensitive(canHibernate);
 					hibernateToggle.set_sensitive(canHibernate);
+					updateConfirmationSensitive();
 					checkRow.set_subtitle(message);
 					checkButton.set_label(canHibernate ? "Re-check" : "Check");
 

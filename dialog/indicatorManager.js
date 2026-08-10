@@ -104,9 +104,7 @@ export class IndicatorManager {
 
 		if (this._settings.get_boolean("enable-hibernate") && this._settings.get_boolean("hibernate-available")) {
 			const hibernateItem = new PopupMenu.PopupImageMenuItem(
-				"Hibernate", "dialog-error-symbolic");
-			hibernateItem._icon.set_pivot_point(0.5, 0.5);
-			hibernateItem._icon.rotation_angle_z = 90;
+				"Hibernate", "system-shutdown-symbolic");
 			hibernateItem.connect("activate", () => {
 				this._powerActions.hibernate();
 			});
@@ -165,18 +163,9 @@ export class IndicatorManager {
 		if (Main.overview.visible)
 			return true;
 
+		// Public panel visibility only — avoid layoutManager private fields.
 		const panelBox = Main.layoutManager.panelBox;
-		if (!panelBox.visible || panelBox.y < 0)
-			return false;
-
-		const trackedActors = Main.layoutManager._trackedActors;
-		if (trackedActors) {
-			const tracked = trackedActors.find(a => a.actor === panelBox);
-			if (!tracked || !tracked.affectsStruts)
-				return false;
-		}
-
-		return true;
+		return panelBox.visible && panelBox.height > 0 && panelBox.y >= 0;
 	}
 
 	toggleDropdownMenu() {

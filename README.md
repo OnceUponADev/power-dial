@@ -30,7 +30,7 @@ A GNOME Shell extension that provides a quick power menu with suspend, lock, res
 | **Lock** | Lock the screen | Immediate action |
 | **Restart** | Reboot the system | Configurable confirmation |
 | **Power Off** | Shutdown the system | Configurable confirmation |
-| **Hibernate** | Save session to disk and power off | Requires system configuration |
+| **Hibernate** | Save session to disk and power off | Configurable confirmation; requires system configuration |
 | **Log Out** | End current user session | Configurable confirmation |
 
 ### Hibernate
