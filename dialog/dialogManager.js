@@ -57,7 +57,7 @@ export class DialogManager {
 			return;
 		}
 
-		const viewMode = this._settings.get_string("view-mode");
+		const viewMode = this._getViewMode();
 		const dialog = new ModalDialog.ModalDialog({
 			styleClass: viewMode === "pill" ? "power-dial-dialog pill-mode" : "power-dial-dialog",
 		});
@@ -130,17 +130,24 @@ export class DialogManager {
 		}
 	}
 
-	_renderDialogView(box) {
-		const viewMode = this._settings.get_string("view-mode");
+	_getViewMode() {
+		const mode = this._settings.get_string("view-mode");
+		if (mode === "stacked")
+			return "stack";
+		if (mode === "tiled")
+			return "tile";
+		return mode;
+	}
 
-		switch (viewMode) {
-			case "tiled":
+	_renderDialogView(box) {
+		switch (this._getViewMode()) {
+			case "tile":
 				this._renderTiledView(box);
 				break;
 			case "pill":
 				this._renderPillView(box);
 				break;
-			case "stacked":
+			case "stack":
 			default:
 				this._renderStackedView(box);
 				break;

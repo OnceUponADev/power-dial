@@ -18,6 +18,12 @@ export default class PowerDialExtension extends Extension {
 	enable() {
 		this._settings = this.getSettings();
 
+		const viewMode = this._settings.get_string("view-mode");
+		if (viewMode === "stacked")
+			this._settings.set_string("view-mode", "stack");
+		else if (viewMode === "tiled")
+			this._settings.set_string("view-mode", "tile");
+
 		this._powerActions = new PowerActions(this._settings);
 		this._dialogManager = new DialogManager(this._settings, this._powerActions);
 		this._keybindingManager = new KeybindingManager(

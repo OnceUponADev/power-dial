@@ -16,11 +16,11 @@ export default class PowerDialPreferences extends ExtensionPreferences {
 		});
 		window.add(page);
 
-		const keyboardGroup = new Adw.PreferencesGroup({
-			title: "Keyboard Shortcut",
-			description: "Configure the keybinding to open Power Dial",
+		const accessGroup = new Adw.PreferencesGroup({
+			title: "Access",
+			description: "Open Power Dial with a keyboard shortcut or the top bar icon",
 		});
-		page.add(keyboardGroup);
+		page.add(accessGroup);
 
 		const displayGroup = new Adw.PreferencesGroup({
 			title: "Display",
@@ -50,7 +50,7 @@ export default class PowerDialPreferences extends ExtensionPreferences {
 			title: "Power Dial Shortcut",
 			subtitle: "Click to change the keyboard shortcut",
 		});
-		keyboardGroup.add(shortcutRow);
+		accessGroup.add(shortcutRow);
 
 		const shortcutButton = new Gtk.Button({
 			valign: Gtk.Align.CENTER,
@@ -65,7 +65,7 @@ export default class PowerDialPreferences extends ExtensionPreferences {
 			shortcutSettings.updateShortcutDisplay(shortcutButton);
 		});
 
-		displaySettings.createTopBarIconRow(displayGroup);
+		displaySettings.createTopBarIconRow(accessGroup);
 		displaySettings.createDialogModeRow(displayGroup);
 		displaySettings.createMinimalDialogRow(displayGroup);
 		displaySettings.createViewModeRow(displayGroup);

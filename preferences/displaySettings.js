@@ -8,21 +8,21 @@ export class DisplaySettings {
 
 	createViewModeRow(displayGroup) {
 		const viewModeRow = new Adw.ComboRow({
-			title: "Power Dial View",
-			subtitle: "Choose how the power options are displayed",
+			title: "Dial Actions View",
+			subtitle: "Choose how the power actions are displayed",
 		});
 		displayGroup.add(viewModeRow);
 
 		const viewModeModel = new Gtk.StringList();
-		viewModeModel.append("Stacked");
-		viewModeModel.append("Tiled");
+		viewModeModel.append("Stack");
+		viewModeModel.append("Tile");
 		viewModeModel.append("Pill");
 		viewModeRow.set_model(viewModeModel);
 
 		const currentViewMode = this._settings.get_string("view-mode");
-		if (currentViewMode === "stacked") {
+		if (currentViewMode === "stack" || currentViewMode === "stacked") {
 			viewModeRow.set_selected(0);
-		} else if (currentViewMode === "tiled") {
+		} else if (currentViewMode === "tile" || currentViewMode === "tiled") {
 			viewModeRow.set_selected(1);
 		} else if (currentViewMode === "pill") {
 			viewModeRow.set_selected(2);
@@ -32,9 +32,9 @@ export class DisplaySettings {
 			const selectedIndex = viewModeRow.get_selected();
 			let selectedMode;
 			if (selectedIndex === 0) {
-				selectedMode = "stacked";
+				selectedMode = "stack";
 			} else if (selectedIndex === 1) {
-				selectedMode = "tiled";
+				selectedMode = "tile";
 			} else if (selectedIndex === 2) {
 				selectedMode = "pill";
 			}
@@ -66,8 +66,8 @@ export class DisplaySettings {
 
 	createTiledDisplayModeRow(displayGroup) {
 		const tiledDisplayModeRow = new Adw.ComboRow({
-			title: "Tiled View Display",
-			subtitle: "Choose how tiles are displayed in tiled view",
+			title: "Tile View Display",
+			subtitle: "Choose how tiles are displayed in tile view",
 		});
 		displayGroup.add(tiledDisplayModeRow);
 
@@ -104,7 +104,7 @@ export class DisplaySettings {
 
 	createDialogModeRow(displayGroup) {
 		const dialogModeRow = new Adw.ComboRow({
-			title: "Dialog Mode",
+			title: "Power Dial View Mode",
 			subtitle: "How the menu opens when clicking the top bar icon",
 		});
 		displayGroup.add(dialogModeRow);
