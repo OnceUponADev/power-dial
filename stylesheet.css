@@ -1,5 +1,11 @@
 .power-dial-dialog {
 	width: 300px;
+	padding: 12px;
+}
+
+.power-dial-dialog .modal-dialog-content-box {
+	padding: 0;
+	margin: 0;
 }
 
 .power-dial-box {
@@ -218,6 +224,7 @@
 
 .power-dial-dialog.pill-mode {
 	width: 300px;
+	border-radius: 34px;
 }
 
 .power-dial-dialog.pill-mode .modal-dialog-button-box .modal-dialog-button {

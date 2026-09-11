@@ -129,4 +129,24 @@ export class DisplaySettings {
 
 		return dialogModeRow;
 	}
+
+	createMinimalDialogRow(displayGroup) {
+		const minimalDialogRow = new Adw.ActionRow({
+			title: "Minimal Dialog",
+			subtitle: "Hide the title and cancel button on the overlay menu",
+		});
+		displayGroup.add(minimalDialogRow);
+
+		const minimalDialogToggle = new Gtk.Switch({
+			active: this._settings.get_boolean("minimal-dialog"),
+			valign: Gtk.Align.CENTER,
+		});
+		minimalDialogRow.add_suffix(minimalDialogToggle);
+
+		minimalDialogToggle.connect("notify::active", () => {
+			this._settings.set_boolean("minimal-dialog", minimalDialogToggle.get_active());
+		});
+
+		return minimalDialogRow;
+	}
 }

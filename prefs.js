@@ -67,6 +67,7 @@ export default class PowerDialPreferences extends ExtensionPreferences {
 
 		displaySettings.createTopBarIconRow(displayGroup);
 		displaySettings.createDialogModeRow(displayGroup);
+		displaySettings.createMinimalDialogRow(displayGroup);
 		displaySettings.createViewModeRow(displayGroup);
 		displaySettings.createTiledDisplayModeRow(displayGroup);
 

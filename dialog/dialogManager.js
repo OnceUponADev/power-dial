@@ -33,6 +33,20 @@ export class DialogManager {
 		}
 	}
 
+	_findFirstFocusableButton(actor) {
+		if (actor instanceof St.Button && actor.can_focus)
+			return actor;
+
+		const children = actor.get_children();
+		for (let i = 0; i < children.length; i++) {
+			const found = this._findFirstFocusableButton(children[i]);
+			if (found)
+				return found;
+		}
+
+		return null;
+	}
+
 	_showPowerMenu() {
 		// Toggle closed if already open
 		if (this._isDialogOpen) {
@@ -43,13 +57,10 @@ export class DialogManager {
 			return;
 		}
 
-		const dialog = new ModalDialog.ModalDialog({
-			styleClass: "power-dial-dialog",
-		});
-
 		const viewMode = this._settings.get_string("view-mode");
-		if (viewMode === "pill")
-			dialog.add_style_class_name("pill-mode");
+		const dialog = new ModalDialog.ModalDialog({
+			styleClass: viewMode === "pill" ? "power-dial-dialog pill-mode" : "power-dial-dialog",
+		});
 
 		this._dialog = dialog;
 		this._isDialogOpen = true;
@@ -62,30 +73,47 @@ export class DialogManager {
 		});
 		dialog.contentLayout.add_child(box);
 
-		const title = new St.Label({
-			text: "Power Dial",
-			style_class: "headline",
-			x_expand: true,
-			x_align: Clutter.ActorAlign.START,
-		});
-		box.add_child(title);
+		const minimalDialog = this._settings.get_boolean("minimal-dialog");
+
+		if (!minimalDialog) {
+			const title = new St.Label({
+				text: "Power Dial",
+				style_class: "headline",
+				x_expand: true,
+				x_align: Clutter.ActorAlign.START,
+			});
+			box.add_child(title);
+		}
 
 		this._renderDialogView(box);
 
-		dialog.setButtons([
-			{
-				label: "Cancel",
-				action: () => dialog.close(),
-				default: true,
-				key: Clutter.KEY_Escape,
-			},
-		]);
+		if (minimalDialog) {
+			dialog.buttonLayout.hide();
+			const firstButton = this._findFirstFocusableButton(box);
+			if (firstButton)
+				dialog.setInitialKeyFocus(firstButton);
+			dialog.connect("key-press-event", (_actor, event) => {
+				if (event.get_key_symbol() === Clutter.KEY_Escape) {
+					dialog.close();
+					return Clutter.EVENT_STOP;
+				}
+				return Clutter.EVENT_PROPAGATE;
+			});
+		} else {
+			dialog.setButtons([
+				{
+					label: "Cancel",
+					action: () => dialog.close(),
+					default: true,
+					key: Clutter.KEY_Escape,
+				},
+			]);
 
-		if (viewMode === "pill") {
-			const buttonBox = dialog.buttonLayout;
-			const cancelButton = buttonBox.get_first_child();
-			if (cancelButton)
-				cancelButton.add_style_class_name("pill-cancel");
+			if (viewMode === "pill") {
+				const cancelButton = dialog.buttonLayout.get_first_child();
+				if (cancelButton)
+					cancelButton.add_style_class_name("pill-cancel");
+			}
 		}
 
 		dialog.connect("closed", () => {

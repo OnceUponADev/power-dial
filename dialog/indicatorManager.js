@@ -160,12 +160,11 @@ export class IndicatorManager {
 		if (!this._indicator || !this._indicator.menu)
 			return false;
 
-		if (Main.overview.visible)
-			return true;
+		if (!this._indicator.mapped)
+			return false;
 
-		// Public panel visibility only — avoid layoutManager private fields.
-		const panelBox = Main.layoutManager.panelBox;
-		return panelBox.visible && panelBox.height > 0 && panelBox.y >= 0;
+		const [, y] = this._indicator.get_transformed_position();
+		return y + this._indicator.height > 0;
 	}
 
 	toggleDropdownMenu() {

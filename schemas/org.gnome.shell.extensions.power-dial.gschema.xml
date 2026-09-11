@@ -21,6 +21,11 @@
       <summary>Dialog mode</summary>
       <description>How the power menu appears. Options: 'overlay' (centered modal dialog with dim) or 'dropdown' (panel dropdown menu).</description>
     </key>
+    <key name="minimal-dialog" type="b">
+      <default>false</default>
+      <summary>Minimal dialog</summary>
+      <description>Hide the title and cancel button on the overlay power menu.</description>
+    </key>
     <key name="tiled-display-mode" type="s">
       <default>'label-with-icons'</default>
       <summary>Tiled view display mode</summary>
