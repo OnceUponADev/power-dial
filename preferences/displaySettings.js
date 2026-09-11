@@ -1,5 +1,6 @@
 import Adw from "gi://Adw";
 import Gtk from "gi://Gtk";
+import { normalizeViewMode } from "../viewMode.js";
 
 export class DisplaySettings {
 	constructor(settings) {
@@ -19,10 +20,10 @@ export class DisplaySettings {
 		viewModeModel.append("Pill");
 		viewModeRow.set_model(viewModeModel);
 
-		const currentViewMode = this._settings.get_string("view-mode");
-		if (currentViewMode === "stack" || currentViewMode === "stacked") {
+		const currentViewMode = normalizeViewMode(this._settings.get_string("view-mode"));
+		if (currentViewMode === "stack") {
 			viewModeRow.set_selected(0);
-		} else if (currentViewMode === "tile" || currentViewMode === "tiled") {
+		} else if (currentViewMode === "tile") {
 			viewModeRow.set_selected(1);
 		} else if (currentViewMode === "pill") {
 			viewModeRow.set_selected(2);

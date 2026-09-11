@@ -1,6 +1,7 @@
 import St from "gi://St";
 import Clutter from "gi://Clutter";
 import * as ModalDialog from "resource:///org/gnome/shell/ui/modalDialog.js";
+import { normalizeViewMode } from "../viewMode.js";
 
 // St.BoxLayout gained the `orientation` property in GNOME 48 and dropped the
 // legacy `vertical` boolean in GNOME 50. Detect once which one the running
@@ -131,12 +132,7 @@ export class DialogManager {
 	}
 
 	_getViewMode() {
-		const mode = this._settings.get_string("view-mode");
-		if (mode === "stacked")
-			return "stack";
-		if (mode === "tiled")
-			return "tile";
-		return mode;
+		return normalizeViewMode(this._settings.get_string("view-mode"));
 	}
 
 	_renderDialogView(box) {
